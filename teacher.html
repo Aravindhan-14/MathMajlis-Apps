@@ -25,10 +25,7 @@ const firebaseConfig = {
   authDomain:"mathmajlis-app.firebaseapp.com",
   projectId:"mathmajlis-app",
   storageBucket:"mathmajlis-app.firebasestorage.app",
-  messagingSenderId:"879528517655",
-  appId:"1:879528517655:web:a8a87ee60a541505edbc52",
-  measurementId:"G-3P1LTSPFJ2"
-};
+  messagingSenderId:"87";
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 
@@ -40,10 +37,10 @@ onAuthStateChanged(auth, (user)=>{
 });
 
 document.getElementById('logoutBtn').onclick = async ()=>{
-  await signOut(auth);
   localStorage.clear();
   location.href='login.html';
 };
 </script>
 </body>
 </html>
+
