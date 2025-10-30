@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>MathMajlis | Sign In / Sign Up</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<style>
+  :root{--bg:#0b0f24;--card:#12183f;--ink:#eef;--muted:#aab2ff;--acc:#4fd1c5;--danger:#ff6b6b}
+  *{box-sizing:border-box} body{margin:0;font-family:sans-serif;background:var(--bg);color:#fff}
+  .wrap{max-width:460px;margin:64px auto;padding:0 16px}
+  .card{background:var(--card);border:1px solid #2a3264;border-radius:14px;overflow:hidden}
+  .tabs{display:flex} .tabs button{flex:1;padding:12px 10px;border:0;background:#0e1533;color:var(--muted);cursor:pointer;font-weight:800}
+  .tabs button.active{background:#1a245a;color:#fff}
+  .pane{padding:18px}
+  label{display:block;margin:10px 0 6px;color:#cbd1ff;font-weight:700}
+  input,select{width:100%;padding:12px;border-radius:10px;border:1px solid #2a3264;background:#0f1330;color:#fff}
+  .row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .btn{width:100%;margin-top:14px;padding:12px;border:0;border-radius:10px;background:var(--acc);color:#06221d;font-weight:900;cursor:pointer}
+  .btn:hover{transform:scale(1.02)} .hint{color:var(--muted);font-size:13px;margin-top:8px}
+  .error{margin-top:10px;color:var(--danger);font-weight:700}
+  .center{display:flex;justify-content:center;gap:10px;margin-top:12px}
+  a.link{color:var(--acc);text-decoration:none;font-weight:700}
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <h2 style="text-align:center;margin:0 0 14px">∑ MathMajlis</h2>
+    <div class="card">
+      <div class="tabs">
+        <button id="tabSignIn" class="active">Sign In</button>
+        <button id="tabSignUp">Sign Up</button>
+      </div>
+
+      <!-- Sign In -->
+      <div id="paneSignIn" class="pane">
+        <form id="formSignIn">
+          <label>Email</label>
+          <input id="siEmail" type="email" required placeholder="you@email.com" />
+          <label>Password</label>
+          <input id="siPass" type="password" required minlength="6" placeholder="••••••••" />
+          <button class="btn">Sign In</button>
+          <div id="siErr" class="error" style="display:none"></div>
+          <p class="hint">Don’t have an account? <a class="link" href="#" id="gotoUp">Create one</a></p>
+        </form>
+      </div>
+
+      <!-- Sign Up -->
+      <div id="paneSignUp" class="pane" style="display:none">
+        <form id="formSignUp">
+          <label>Full Name</label>
+          <input id="suName" required placeholder="Your name" />
+          <div class="row">
+            <div>
+              <label>Role</label>
+              <select id="suRole" required>
+                <option value="">Select role</option>
+                <option value="student">Student</option>
+                
+              </select>
+            </div>
+            <div>
+              <label>Board</label>
+              <select id="suBoard" required>
+                <option value="">Select</option>
+                <option>CBSE</option><option>IB</option><option>American</option>
+                <option>UK</option><option>MoE</option>
+              </select>
+            </div>
+          </div>
+          <label>Email</label>
+          <input id="suEmail" type="email" required placeholder="you@email.com" />
+          <label>Password</label>
+          <input id="suPass" type="password" required minlength="6" placeholder="Min 6 characters" />
+          <button class="btn">Create Account</button>
+          <div id="suErr" class="error" style="display:none"></div>
+          <p class="hint">Already have an account? <a class="link" href="#" id="gotoIn">Sign in</a></p>
+        </form>
+      </div>
+    </div>
+
+    <div class="center">
+      <a class="link" href="index.html">← Home</a>
+      <a class="link" href="live.html">Live Classes</a>
+    </div>
+  </div>
+
+<script type="module">
+/* ------------------ Firebase SDK (inline) ------------------ */
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-app.js";
+import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, updateProfile, signOut } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-auth.js";
+import { getFirestore, doc, setDoc, getDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey:"AIzaSyDJQ2Or0T74wXzUQVHokg-Vsvpd3aSHadE",
+  authDomain:"mathmajlis-app.firebaseapp.com",
+  projectId:"mathmajlis-app",
+  storageBucket:"mathmajlis-app.firebasestorage.app",
+  messagingSenderId:"879528517655",
+  appId:"1:879528517655:web:a8a87ee60a541505edbc52",
+  measurementId:"G-3P1LTSPFJ2"
+};
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db   = getFirestore(app);
+
+/* ------------------ Tabs ------------------ */
+const tabIn = document.getElementById('tabSignIn');
+const tabUp = document.getElementById('tabSignUp');
+const paneIn = document.getElementById('paneSignIn');
+const paneUp = document.getElementById('paneSignUp');
+const gotoUp = document.getElementById('gotoUp');
+const gotoIn = document.getElementById('gotoIn');
+function show(tab){
+  if(tab==='in'){ tabIn.classList.add('active'); tabUp.classList.remove('active'); paneIn.style.display='block'; paneUp.style.display='none'; }
+  else { tabUp.classList.add('active'); tabIn.classList.remove('active'); paneUp.style.display='block'; paneIn.style.display='none'; }
+}
+tabIn.onclick=()=>show('in'); tabUp.onclick=()=>show('up'); gotoUp.onclick=(e)=>{e.preventDefault();show('up')}; gotoIn.onclick=(e)=>{e.preventDefault();show('in')};
+
+/* ------------------ Redirect if already logged in ------------------ */
+onAuthStateChanged(auth, async (user)=>{
+  if(!user) return;
+  // read role from Firestore
+  const profRef = doc(db,'users', user.uid);
+  const snap = await getDoc(profRef);
+  const role = snap.exists() ? snap.data().role : (localStorage.getItem('userRole')||'student');
+  routeByRole(role);
+});
+
+/* ------------------ Sign In ------------------ */
+document.getElementById('formSignIn').addEventListener('submit', async (e)=>{
+  e.preventDefault();
+  const email = document.getElementById('siEmail').value.trim();
+  const pass  = document.getElementById('siPass').value;
+  const errBox = document.getElementById('siErr'); errBox.style.display='none';
+
+  try{
+    const cred = await signInWithEmailAndPassword(auth, email, pass);
+    // get role from Firestore
+    const prof = await getDoc(doc(db,'users', cred.user.uid));
+    const role = prof.exists() ? prof.data().role : 'student';
+    localStorage.setItem('userRole', role);
+    localStorage.setItem('userEmail', cred.user.email);
+    routeByRole(role);
+  }catch(err){
+    errBox.textContent = "Sign in failed: "+err.message;
+    errBox.style.display='block';
+  }
+});
+
+/* ------------------ Sign Up ------------------ */
+document.getElementById('formSignUp').addEventListener('submit', async (e)=>{
+  e.preventDefault();
+  const name  = document.getElementById('suName').value.trim();
+  const role  = document.getElementById('suRole').value;
+  const board = document.getElementById('suBoard').value;
+  const email = document.getElementById('suEmail').value.trim();
+  const pass  = document.getElementById('suPass').value;
+  const errBox= document.getElementById('suErr'); errBox.style.display='none';
+
+  try{
+    const cred = await createUserWithEmailAndPassword(auth, email, pass);
+    await updateProfile(cred.user, { displayName: name });
+
+    // Save profile in Firestore (role, board, name, email)
+    await setDoc(doc(db,'users', cred.user.uid), {
+      name, email, role, board, createdAt: serverTimestamp()
+    });
+
+    localStorage.setItem('userRole', role);
+    localStorage.setItem('userEmail', email);
+    routeByRole(role);
+  }catch(err){
+    errBox.textContent = "Sign up failed: "+err.message;
+    errBox.style.display='block';
+  }
+});
+
+/* ------------------ Route Helper ------------------ */
+function routeByRole(role){
+  if(role==='admin') location.href='admin.html';
+  else if(role==='teacher') location.href='teacher.html';
+  else location.href='dashboard.html';
+}
+</script>
+</body>
+</html>
+
+
+
+
+https://chatgpt.com/c/6900b171-f834-8321-a8c6-f3cbe23ad5db

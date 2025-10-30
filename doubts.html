@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>MathMajlis | Doubts</title>
+<style>
+body{margin:0;font-family:sans-serif;background:#0b0f24;color:#fff;}
+header{background:#10163a;padding:10px 20px;}
+form{max-width:600px;margin:20px auto;background:#12183f;padding:20px;border-radius:12px;}
+input,textarea,select{width:100%;padding:10px;border:none;border-radius:8px;margin-top:6px;background:#0f1330;color:#fff;}
+.btn{background:#4fd1c5;color:#081923;border:none;padding:10px 14px;border-radius:8px;margin-top:10px;cursor:pointer;}
+.card{background:#12183f;margin:10px;padding:10px;border-radius:8px;}
+</style>
+</head>
+<body>
+<header><a href="index.html">← Home</a> | Doubts</header>
+<form id="doubtForm">
+  <label>Board</label>
+  <select id="board"><option>CBSE</option><option>IB</option><option>American</option></select>
+  <label>Your Question</label>
+  <textarea id="question" placeholder="Type your doubt..."></textarea>
+  <button class="btn">Submit</button>
+</form>
+<div id="list"></div>
+
+<script>
+let doubts=JSON.parse(localStorage.getItem('doubts')||'[]');
+function render(){document.getElementById('list').innerHTML=doubts.map(d=>`<div class="card"><b>${d.board}</b>: ${d.q}</div>`).join('');}
+render();
+document.getElementById('doubtForm').onsubmit=e=>{
+  e.preventDefault();
+  const board=document.getElementById('board').value;
+  const q=document.getElementById('question').value;
+  if(!q)return;
+  doubts.push({board,q});
+  localStorage.setItem('doubts',JSON.stringify(doubts));
+  render();
+  e.target.reset();
+};
+</script>
+</body>
+</html>

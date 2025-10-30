@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>MathMajlis | Practice</title>
+<style>
+body{margin:0;font-family:sans-serif;background:#0b0f24;color:#fff;}
+header{background:#10163a;padding:10px 20px;}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:16px;padding:20px;}
+.card{background:#12183f;border-radius:12px;padding:16px;}
+.btn{background:#4fd1c5;color:#081923;border:none;padding:8px 12px;border-radius:6px;cursor:pointer;margin-top:8px;}
+</style>
+</head>
+<body>
+<header><a href="index.html">← Home</a> | Practice Tests</header>
+<section class="grid" id="practiceGrid"></section>
+
+<script>
+const PRACTICE=[
+  {title:'Algebra Quiz – 10 Qs',time:'10 min'},
+  {title:'Geometry Challenge',time:'15 min'}
+];
+document.getElementById('practiceGrid').innerHTML=PRACTICE.map(p=>`
+<div class="card"><h3>${p.title}</h3><p>Time: ${p.time}</p><button class="btn">Start</button></div>`).join('');
+</script>
+</body>
+</html>

@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>MathMajlis | Recorded</title>
+<style>
+body{margin:0;font-family:sans-serif;background:#0b0f24;color:#fff;}
+header{background:#10163a;padding:10px 20px;}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:20px;padding:20px;}
+.card{background:#12183f;border-radius:12px;padding:16px;}
+iframe{width:100%;height:200px;border:none;border-radius:10px;}
+</style>
+</head>
+<body>
+<header><a href="index.html">← Home</a> | Recorded Classes</header>
+<section class="grid" id="recGrid"></section>
+
+<script>
+const RECORDED=[
+  {title:'Algebra Basics',url:'https://www.youtube.com/embed/dQw4w9WgXcQ'},
+  {title:'Functions Explained',url:'https://www.youtube.com/embed/dQw4w9WgXcQ'}
+];
+document.getElementById('recGrid').innerHTML=RECORDED.map(r=>`
+<div class="card"><h3>${r.title}</h3><iframe src="${r.url}" allowfullscreen></iframe></div>`).join('');
+</script>
+</body>
+</html>
